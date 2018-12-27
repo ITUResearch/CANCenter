@@ -32,6 +32,20 @@ let VCI_INIT_CONFIG_EX = refStruct({
   "Reserved": ref.types.uint32    // reserved
 });
 
+let VCI_FILTER_CONFIG = refStruct({
+	"Enable": ref.types.uint8,			//filter enable, 1: enable, 0: disable
+	"FilterIndex": ref.types.uint8,	//filter index, range: 0~13
+	"FilterMode": ref.types.uint8,		//filter mode, 0: mask bit, 1: id list
+	"ExtFrame": ref.types.uint8,		//filter frame flag, 1: the frame to be filtered is extended frame, 0��the frame to be filtered is standard frame
+	"ID_Std_Ext": ref.types.uint32,		//verification code ID
+	"ID_IDE": ref.types.uint32,			//verification code IDE
+	"ID_RTR": ref.types.uint32,			//verification code RTR
+	"MASK_Std_Ext": ref.types.uint32,	//Mask code ID, only available when filter mode set to mask bit mode
+	"MASK_IDE": ref.types.uint32,		//Mask code IDE, only available when filter mode set to mask bit mode
+	"MASK_RTR": ref.types.uint32,		//Mask code RTR, only available when filter mode set to mask bit mode
+	"Reserved": ref.types.uint32		//reserved
+});
+
 let VCI_BOARD_INFO_EX = refStruct({
   "ProductName": refArray('uint8', 32),	    //hardware name,for example: ��Ginkgo-CAN-Adapter\0��(note: include string null end'\0��)
 	"FirmwareVersion": refArray('uint8', 4),	//firmware version
@@ -58,6 +72,7 @@ let CanObjArray = refArray(VCI_CAN_OBJ);
 let VciConfigPtr = ref.refType(VCI_INIT_CONFIG);
 let VciConfigExPtr = ref.refType(VCI_INIT_CONFIG_EX);
 let VciBoardInfoPtr = ref.refType(VCI_BOARD_INFO_EX);
+let VciFilterConfigPtr = ref.refType(VCI_FILTER_CONFIG);
 
 const CanLib = ffi.Library("./lib/linux/64bit/libGinkgo_Driver.so", {
   'VCI_ScanDevice': ['uint32', ['uint8']],
@@ -65,6 +80,7 @@ const CanLib = ffi.Library("./lib/linux/64bit/libGinkgo_Driver.so", {
   'VCI_CloseDevice': ['uint32', ['uint32', 'uint32']],
   'VCI_InitCAN': ['uint32', ['uint32', 'uint32', 'uint32', VciConfigPtr]],
   'VCI_InitCANEx': ['uint32', ['uint32', 'uint32', 'uint32', VciConfigExPtr]],
+	'VCI_SetFilter': ['uint32', ['uint32', 'uint32', 'uint32', VciFilterConfigPtr]],
   'VCI_ReadBoardInfoEx': ['uint32', ['uint32', VciBoardInfoPtr]],
   'VCI_GetReceiveNum': ['uint32', ['uint32', 'uint32', 'uint32']],
   'VCI_ClearBuffer': ['uint32', ['uint32', 'uint32', 'uint32']],
@@ -81,6 +97,8 @@ module.exports = {
   VCI_USBCAN2: VCI_USBCAN2,
   VCI_BOARD_INFO_EX: VCI_BOARD_INFO_EX,
   VCI_INIT_CONFIG: VCI_INIT_CONFIG,
+	VCI_INIT_CONFIG_EX: VCI_INIT_CONFIG_EX,
+	VCI_FILTER_CONFIG: VCI_FILTER_CONFIG,
   VCI_CAN_OBJ: VCI_CAN_OBJ,
 	CanObjArray: CanObjArray,
   CanLib: CanLib

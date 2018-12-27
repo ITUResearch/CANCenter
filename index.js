@@ -34,16 +34,41 @@ console.log("--CAN_BoardInfo.FirmwareVersion = ", boardInfo.FirmwareVersion);
 console.log("--CAN_BoardInfo.HardwareVersion = ", boardInfo.HardwareVersion);
 console.log("--CAN_BoardInfo.SerialNumber = ", boardInfo.SerialNumber);
 
-let initConfig = new CANBus.VCI_INIT_CONFIG();
-initConfig.AccCode = 0x00000000;
-initConfig.AccMask = 0xFFFFFFFF;
-initConfig.Filter = 1;
-initConfig.Mode = 0;
-initConfig.Timing0 = 0x00;
-initConfig.Timing1 = 0x1C;
+// let initConfig = new CANBus.VCI_INIT_CONFIG();
+// initConfig.AccCode = 0x00000000;
+// initConfig.AccMask = 0xFFFFFFFF;
+// initConfig.Filter = 1;
+// initConfig.Mode = 0;
+// initConfig.Timing0 = 0x00;
+// initConfig.Timing1 = 0x1C;
+//
+// let retInit = CanAPI.VCI_InitCAN(CANBus.VCI_USBCAN2, 0, 0, initConfig.ref());
+// console.log("Init device result = ", retInit);
 
-let retInit = CanAPI.VCI_InitCAN(CANBus.VCI_USBCAN2, 0, 0, initConfig.ref());
-console.log("Init device result = ", retInit);
+let CAN_InitEx = new CANBus.VCI_INIT_CONFIG_EX();
+CAN_InitEx.CAN_ABOM = 0;
+CAN_InitEx.CAN_Mode = 0;
+
+CAN_InitEx.CAN_BRP = 12; //6;
+CAN_InitEx.CAN_BS1 = 4; //3;
+CAN_InitEx.CAN_BS2 = 1; //2;
+CAN_InitEx.CAN_SJW = 1;
+
+CAN_InitEx.CAN_NART = 0;
+CAN_InitEx.CAN_RFLM = 0;
+CAN_InitEx.CAN_TXFP = 1;
+CAN_InitEx.CAN_RELAY = 0;
+
+let statusInit = CanAPI.VCI_InitCANEx(CANBus.VCI_USBCAN2, 0, 0, CAN_InitEx.ref());
+console.log("Init Can Index 1 result = ", statusInit);
+CAN_InitEx.CAN_BRP = 9; //6;
+CAN_InitEx.CAN_BS1 = 2; //3;
+CAN_InitEx.CAN_BS2 = 1; //2;
+CAN_InitEx.CAN_SJW = 1;
+console.log("CAN_InitEx - ", CAN_InitEx);
+statusInit = CanAPI.VCI_InitCANEx(CANBus.VCI_USBCAN2, 0, 1, CAN_InitEx.ref());
+console.log("Init Can Index 2 result = ", statusInit);
+
 
 let getDataCallback = ffi.Callback('void', ['uint32', 'uint32', 'uint32'],
     function(devIndex, canIndex, len) {
@@ -109,10 +134,10 @@ for (let i = 0; i < 2; i++) {
   }
   canSendData[i].ExternFlag = 0;
   canSendData[i].RemoteFlag = 0;
-  canSendData[i].ID = 0x155+i;
-  canSendData[i].SendType = 2;
+  canSendData[i].ID = 0x468;
+  canSendData[i].SendType = 0;
 }
-// console.log("canSendData[1] = ", canSendData[1]);
+console.log("canSendData[1] = ", canSendData[1]);
 // console.log("typeof canSendData = ", typeof canSendData);
 resSent = CanAPI.VCI_Transmit(CANBus.VCI_USBCAN2, 0, 0, canSendData.ref(), 2);
 console.log("result of send : ", resSent);
