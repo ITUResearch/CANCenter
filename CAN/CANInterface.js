@@ -86,6 +86,7 @@ class CANInterface {
     console.log("setInterval - id = " + id + ", seconds = " + seconds);
     console.log("setInterval - typeof(idNum) = " + typeof idNum + ", seconds = " + seconds);
 
+    // send 1 frame data everytime, CANBus.CanObjArray(2); will not work;
     let canSendData = new CANBus.CanObjArray(1);
 
     // for (var i = 0; i < 2; i++) {
