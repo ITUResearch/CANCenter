@@ -11,7 +11,6 @@ CANCenterClient will collect the data from end device via CAN and report it to L
 
 start CANCenterClient independently
 ```
-npm insatll -g concurrently
 sudo npm run client
 ```
 #### 2) BroadcastReceiver  
