@@ -1,5 +1,26 @@
 # CANCenter
 
+## 0. how to start
+```
+npm insatll -g concurrently
+sudo npm start
+```
+The service contains 2 services:  
+### 1) CANCenterClient  
+CANCenterClient will collect the data from end device via CAN and report it to Local Server.
+start CANCenterClient independently
+```
+npm insatll -g concurrently
+sudo npm run client
+```
+### 2) BroadcastReceiver  
+BroadcastReceiver will transmit the action from Local Server to target end device via CAN according to FrameID.  
+The data frame is defined in *1. CAN data frame*
+start BroadcastReceiver independently
+```
+sudo npm run udpServer
+```
+
 ## 1. CAN data frame
 ![Standard CAN data frame](https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/CAN-Bus-frame_in_base_format_without_stuffbits.svg/709px-CAN-Bus-frame_in_base_format_without_stuffbits.svg.png)
 The data struct is as follow:
@@ -44,4 +65,3 @@ Data[0] : commondID enum
 Data[1] : 4-bit param number + 4-bit param data length
 Data[2] - Data[7] : paramter
 ```
-
