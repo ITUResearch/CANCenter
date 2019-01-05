@@ -42,21 +42,21 @@ class CANInterface {
 		CAN_InitEx.CAN_BS2 = 1; //2;
 		CAN_InitEx.CAN_SJW = 1;
 
-    CAN_InitEx.CAN_NART = 0;
+    CAN_InitEx.CAN_NART = 1;
     CAN_InitEx.CAN_RFLM = 0;
     CAN_InitEx.CAN_TXFP = 1;
 		CAN_InitEx.CAN_RELAY = 0;
 
     let statusInit = CanAPI.VCI_InitCANEx(CANBus.VCI_USBCAN2, 0, 0, CAN_InitEx.ref());
     console.log("Init Can Index 1 result = ", statusInit);
-    CAN_InitEx.CAN_BRP = 9; //6;
-    CAN_InitEx.CAN_BS1 = 2; //3;
+    CAN_InitEx.CAN_BRP = 12; //6;
+    CAN_InitEx.CAN_BS1 = 4; //3;
     CAN_InitEx.CAN_BS2 = 1; //2;
     CAN_InitEx.CAN_SJW = 1;
     console.log("CAN_InitEx - ", CAN_InitEx);
     statusInit = CanAPI.VCI_InitCANEx(CANBus.VCI_USBCAN2, 0, 1, CAN_InitEx.ref());
     console.log("Init Can Index 2 result = ", statusInit);
-    //Set filter
+    //Set filter1128,
     let CAN_FilterConfig = new CANBus.VCI_FILTER_CONFIG();
     CAN_FilterConfig.FilterIndex = 0;
     CAN_FilterConfig.Enable = 1;		//Enable0x09
@@ -90,7 +90,7 @@ class CANInterface {
     let canSendData = new CANBus.CanObjArray(1);
 
     // for (var i = 0; i < 2; i++) {
-    //   canSendData[i].DataLen = 8;
+    //   canSendData[i].DataLen = 8;1128,
     //   for (let j = 0; j < canSendData[i].DataLen; j++) {
     //     canSendData[i].Data[j] = 0;
     //   }
@@ -111,7 +111,7 @@ class CANInterface {
     console.log("Data[7] = ", canSendData[0].Data[7]);
     canSendData[0].ExternFlag = 0;
     canSendData[0].RemoteFlag = 0;
-    canSendData[0].ID = 0x468;
+    canSendData[0].ID = 0x285;
     canSendData[0].SendType = 0;
     console.log("Data to send : ", canSendData);
 
